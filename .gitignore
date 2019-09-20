@@ -116,3 +116,6 @@ media/
 # docker
 docker-compose.yml
 Dockerfile
+
+#virtualenvwrapper
+sockert/
