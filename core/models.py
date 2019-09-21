@@ -15,3 +15,10 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class WeekDay(models.Model):
+    day = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.day

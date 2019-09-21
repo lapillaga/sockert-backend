@@ -6,10 +6,10 @@ from django.utils.translation import gettext as _
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
-    list_display = ['email', 'first_name']
+    list_display = ['email', 'first_name', 'last_name']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal Info'), {'fields': ('first_name',)}),
+        (_('Personal Information'), {'fields': ('first_name', 'last_name', 'first_phone')}),
         (
             _('Permissions'),
             {

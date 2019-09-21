@@ -1,14 +1,12 @@
+from django.utils.timezone import now
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import City
+from player.models import Player
 
 
 class Manager(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    id_card = models.CharField(max_length=10,
-                               null=True, blank=True, unique=True)
-    first_phone = models.CharField(max_length=13)
-    second_phone = models.CharField(max_length=13, blank=True, null=True)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -24,18 +22,25 @@ def custom_team_upload_to(instance, filename):
 
 
 class Team(models.Model):
-    STATE_PRE_REGISTERED, STATE_REGISTERED, \
-        STATE_CONFIRMED = "PRE_REGISTERED", "REGISTERED", "CONFIRMED",
-    STATE_CHOICES = (
-        (STATE_PRE_REGISTERED, "Pre-Registrado"),
-        (STATE_REGISTERED, "Registrado"),
-        (STATE_CONFIRMED, "Confirmado")
-    )
     manager = models.ForeignKey(Manager, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
     name = models.CharField(max_length=40)
     logo = models.ImageField(upload_to=custom_team_upload_to)
-    state = models.CharField(max_length=15, choices=STATE_CHOICES)
     address = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class TeamPlayer(models.Model):
+    STATE_REGISTERED, STATE_ENROLLED, \
+        STATE_BANNED = "REGISTERED", "ENROLLED", "BANNED",
+    STATE_CHOICES = (
+        (STATE_REGISTERED, "Registradp"),
+        (STATE_ENROLLED, "Inscrito"),
+        (STATE_BANNED, "Baneado")
+    )
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    player_state = models.CharField(max_length=11, choices=STATE_CHOICES)
+    number = models.PositiveSmallIntegerField()
+    registered_at = models.DateTimeField(default=now)
